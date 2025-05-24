@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+
+<html lang="pl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Mistrzowie Mianownika</title>
+
+<style>
+
+body {
+
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+background-color: #2c3e50; /* Ciemnoszary niebieski */
+
+color: #ecf0f1; /* Jasnoszary */
+
+display: flex;
+
+flex-direction: column;
+
+align-items: center;
+
+justify-content: center;
+
+min-height: 100vh;
+
+margin: 0;
+
+padding: 20px;
+
+box-sizing: border-box;
+
+text-align: center;
+
+}
+
+
+.game-container {
+
+background-color: #34495e; /* Ciemniejszy niebiesko-szary */
+
+padding: 20px;
+
+border-radius: 10px;
+
+box-shadow: 0 0 20px rgba(0,0,0,0.5);
+
+width: 90%;
+
+max-width: 600px;
+
+}
+
+
+h1 {
+
+color: #e67e22; /* Pomarańczowy */
+
+font-size: 2.2em; 
+
+margin-bottom: 20px;
+
+}
+
+
+.info-bar {
+
+display: flex;
+
+justify-content: space-between;
+
+margin-bottom: 20px;
+
+font-size: 1em; 
+
+}
+
+
+.score, .question-counter, .timer {
+
+background-color: #2c3e50;
+
+padding: 10px 12px; 
+
+border-radius: 5px;
+
+}
+
+.timer-bar-container {
+
+width: 100%;
+
+height: 20px;
+
+background-color: #7f8c8d; /* Szary */
+
+border-radius: 5px;
+
+margin-bottom: 20px;
+
+overflow: hidden;
+
+}
+
+
+.timer-bar {
+
+height: 100%;
+
+width: 100%;
+
+background-color: #3498db; /* ZMIANA: Niebieski (zamiast zielonego) */
+
+border-radius: 5px;
+
+transition: width 0.1s linear, background-color 0.3s linear; /* Dodano przejście dla koloru tła */
+
+}
+
+
+.question-area {
+
+font-size: 1.6em; 
+
+margin-bottom: 20px;
+
+padding: 15px;
+
+background-color: #8e44ad; /* ZMIANA: Fioletowy (Wisteria) (zamiast czerwonego) */
+
+border-radius: 5px;
+
+min-height: 50px;
+
+display: flex;
+
+align-items: center;
+
+justify-content: center;
+
+line-height: 1.4; 
+
+}
+
+
+input[type="text"] {
+
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+width: calc(100% - 24px); 
+
+padding: 12px; 
+
+margin-bottom: 20px;
+
+border: 2px solid #e67e22; /* Pomarańczowy */
+
+border-radius: 5px;
+
+background-color: #ecf0f1;
+
+color: #2c3e50;
+
+font-size: 1.1em; 
+
+}
+
+
+button {
+
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+background-color: #e67e22; /* Pomarańczowy */
+
+color: #ecf0f1;
+
+border: none;
+
+padding: 12px 20px;
+
+border-radius: 5px;
+
+cursor: pointer;
+
+font-size: 1.1em; 
+
+transition: background-color 0.3s;
+
+margin: 5px;
+
+font-weight: bold; 
+
+}
+
+
+button:hover {
+
+background-color: #d35400; /* Ciemniejszy pomarańczowy */
+
+}
+
+button:active {
+
+background-color: #a84300; /* ZMIANA: Bardzo ciemny pomarańczowy (zamiast czerwonego) */
+
+}
+
+
+
+.feedback {
+
+margin-top: 15px;
+
+font-size: 1.2em; 
+
+min-height: 30px;
+
+line-height: 1.5;
+
+}
+
+
+.correct {
+
+color: #3498db; /* ZMIANA: Niebieski (Peter River) (zamiast zielonego) */
+
+font-weight: bold;
+
+}
+
+
+.incorrect {
+
+color: #d35400; /* ZMIANA: Ciemny pomarańcz (zamiast czerwonego) */
+
+font-weight: bold;
+
+}
+
+.start-screen, .end-screen {
+
+display: flex;
+
+flex-direction: column;
+
+align-items: center;
+
+justify-content: center;
+
+font-size: 1.1em; 
+
+}
+
+.start-screen p, .end-screen p {
+
+line-height: 1.6;
+
+margin-bottom: 15px;
+
+}
+
+
+
+.hidden {
+
+display: none !important;
+
+}
+
+
+/* Style dla małych ekranów */
+
+@media (max-width: 600px) {
+
+h1 {
+
+font-size: 1.8em;
+
+}
+
+.info-bar {
+
+flex-direction: column;
+
+gap: 10px;
+
+font-size: 0.9em;
+
+}
+
+.question-area {
+
+font-size: 1.3em;
+
+}
+
+input[type="text"], button {
+
+font-size: 1em;
+
+}
+
+}
+
+
+</style>
+
+</head>
+
+<body>
+
+<div class="game-container">
+
+<h1>Mistrzowie Mianownika</h1>
+
+
+<div id="startScreen" class="start-screen">
+
+<p>Witaj w grze "Mistrzowie Mianownika"!</p>
+
+<p>Podaj poprawną formę mianownika liczby mnogiej rodzaju męskoosobowego.</p>
+
+<button id="startButton">Start</button>
+
+</div>
+
+
+<div id="gameArea" class="hidden">
+
+<div class="info-bar">
+
+<div class="score">Wynik: <span id="score">0</span></div>
+
+<div class="question-counter">Pytanie: <span id="questionCount">0</span>/<span id="totalQuestions">0</span></div>
+
+</div>
+
+<div class="timer-bar-container">
+
+<div id="timerBar" class="timer-bar"></div>
+
+</div>
+
+<div id="timerDisplay" class="timer">Czas: <span id="timeLeft">60</span>s</div>
+
+
+
+<div id="questionArea" class="question-area"></div>
+
+<input type="text" id="answerInput" placeholder="Wpisz odpowiedź...">
+
+<button id="checkButton">Sprawdź</button>
+
+<button id="nextButton" class="hidden">Następne</button>
+
+<div id="feedback" class="feedback"></div>
+
+</div>
+
+
+<div id="endScreen" class="end-screen hidden">
+
+<h2>Koniec Gry!</h2>
+
+<p>Twój ostateczny wynik: <span id="finalScore">0</span></p>
+
+<button id="restartButton">Zagraj Ponownie</button>
+
+</div>
+
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
+
+<script>
+
+// --- Elementy DOM ---
+
+const startScreen = document.getElementById('startScreen');
+
+const gameArea = document.getElementById('gameArea');
+
+const endScreen = document.getElementById('endScreen');
+
+
+const startButton = document.getElementById('startButton');
+
+const checkButton = document.getElementById('checkButton');
+
+const nextButton = document.getElementById('nextButton');
+
+const restartButton = document.getElementById('restartButton');
+
+const scoreDisplay = document.getElementById('score');
+
+const questionCountDisplay = document.getElementById('questionCount');
+
+const totalQuestionsDisplay = document.getElementById('totalQuestions');
+
+const timerBar = document.getElementById('timerBar');
+
+const timeLeftDisplay = document.getElementById('timeLeft');
+
+const questionArea = document.getElementById('questionArea');
+
+const answerInput = document.getElementById('answerInput');
+
+const feedbackDisplay = document.getElementById('feedback');
+
+const finalScoreDisplay = document.getElementById('finalScore');
+
+
+// --- Dane Gry (z PDF) ---
+
+const nouns = [
+
+{ l_poj: "Czech", l_mn_mo: "Czesi" }, { l_poj: "Włoch", l_mn_mo: "Włosi" },
+
+{ l_poj: "sąsiad", l_mn_mo: "sąsiedzi" }, { l_poj: "Szwed", l_mn_mo: "Szwedzi" },
+
+{ l_poj: "Żyd", l_mn_mo: "Żydzi" }, { l_poj: "ortopeda", l_mn_mo: "ortopedzi" },
+
+{ l_poj: "architekt", l_mn_mo: "architekci" }, { l_poj: "ekspert", l_mn_mo: "eksperci" },
+
+{ l_poj: "emeryt", l_mn_mo: "emeryci" }, { l_poj: "emigrant", l_mn_mo: "emigranci" },
+
+{ l_poj: "klient", l_mn_mo: "klienci" }, { l_poj: "komendant", l_mn_mo: "komendanci" },
+
+{ l_poj: "konsument", l_mn_mo: "konsumenci" }, { l_poj: "kursant", l_mn_mo: "kursanci" },
+
+{ l_poj: "laureat", l_mn_mo: "laureaci" }, { l_poj: "pacjent", l_mn_mo: "pacjenci" },
+
+{ l_poj: "pasjonat", l_mn_mo: "pasjonaci" }, { l_poj: "pilot", l_mn_mo: "piloci" },
+
+{ l_poj: "policjant", l_mn_mo: "policjanci" }, { l_poj: "producent", l_mn_mo: "producenci" },
+
+{ l_poj: "reprezentant", l_mn_mo: "reprezentanci" }, { l_poj: "student", l_mn_mo: "studenci" },
+
+{ l_poj: "astronauta", l_mn_mo: "astronauci" }, { l_poj: "Azjata", l_mn_mo: "Azjaci" },
+
+{ l_poj: "fizjoterapeuta", l_mn_mo: "fizjoterapeuci" }, { l_poj: "poeta", l_mn_mo: "poeci" },
+
+{ l_poj: "artysta", l_mn_mo: "artyści" }, { l_poj: "dentysta", l_mn_mo: "dentyści" },
+
+{ l_poj: "ekonomista", l_mn_mo: "ekonomiści" }, { l_poj: "masażysta", l_mn_mo: "masażyści" },
+
+{ l_poj: "maturzysta", l_mn_mo: "maturzyści" }, { l_poj: "programista", l_mn_mo: "programiści" },
+
+{ l_poj: "rowerzysta", l_mn_mo: "rowerzyści" }, { l_poj: "specjalista", l_mn_mo: "specjaliści" },
+
+{ l_poj: "turysta", l_mn_mo: "turyści" }, { l_poj: "Białorusin", l_mn_mo: "Białorusini" },
+
+{ l_poj: "biznesmen", l_mn_mo: "biznesmeni" }, { l_poj: "chłop", l_mn_mo: "chłopi" },
+
+{ l_poj: "Francuz", l_mn_mo: "Francuzi" }, { l_poj: "klaun", l_mn_mo: "klauni" },
+
+{ l_poj: "kuzyn", l_mn_mo: "kuzyni" }, { l_poj: "Litwin", l_mn_mo: "Litwini" },
+
+{ l_poj: "pielgrzym", l_mn_mo: "pielgrzymi" }, { l_poj: "prezes", l_mn_mo: "prezesi" },
+
+{ l_poj: "Hiszpan", l_mn_mo: "Hiszpanie" }, { l_poj: "doradca", l_mn_mo: "doradcy" },
+
+{ l_poj: "kierowca", l_mn_mo: "kierowcy" }, { l_poj: "kredytobiorca", l_mn_mo: "kredytobiorcy" },
+
+{ l_poj: "mówca", l_mn_mo: "mówcy" }, { l_poj: "najemca", l_mn_mo: "najemcy" },
+
+{ l_poj: "obrońca", l_mn_mo: "obrońcy" }, { l_poj: "pracodawca", l_mn_mo: "pracodawcy" },
+
+{ l_poj: "przedsiębiorca", l_mn_mo: "przedsiębiorcy" }, { l_poj: "rozmówca", l_mn_mo: "rozmówcy" },
+
+{ l_poj: "sprzedawca", l_mn_mo: "sprzedawcy" }, { l_poj: "twórca", l_mn_mo: "twórcy" },
+
+{ l_poj: "budowlaniec", l_mn_mo: "budowlańcy" }, { l_poj: "chłopiec", l_mn_mo: "chłopcy" },
+
+{ l_poj: "cudzoziemiec", l_mn_mo: "cudzoziemcy" }, { l_poj: "mieszkaniec", l_mn_mo: "mieszkańcy" },
+
+{ l_poj: "naukowiec", l_mn_mo: "naukowcy" }, { l_poj: "Niemiec", l_mn_mo: "Niemcy" },
+
+{ l_poj: "nowożeniec", l_mn_mo: "nowożeńcy" }, { l_poj: "obcokrajowiec", l_mn_mo: "obcokrajowcy" },
+
+{ l_poj: "sportowiec", l_mn_mo: "sportowcy" }, { l_poj: "Ukrainiec", l_mn_mo: "Ukraińcy" },
+
+{ l_poj: "chirurg", l_mn_mo: "chirurdzy" }, { l_poj: "ekolog", l_mn_mo: "ekolodzy" },
+
+{ l_poj: "pedagog", l_mn_mo: "pedagodzy" },
+
+{ l_poj: "psycholog", l_mn_mo: ["psycholodzy", "psychologowie"] },
+
+{ l_poj: "kolega", l_mn_mo: "koledzy" }, { l_poj: "analityk", l_mn_mo: "analitycy" },
+
+{ l_poj: "Chińczyk", l_mn_mo: "Chińczycy" }, { l_poj: "Grek", l_mn_mo: "Grecy" },
+
+{ l_poj: "informatyk", l_mn_mo: "informatycy" }, { l_poj: "muzyk", l_mn_mo: "muzycy" },
+
+{ l_poj: "podatnik", l_mn_mo: "podatnicy" }, { l_poj: "Polak", l_mn_mo: "Polacy" },
+
+{ l_poj: "polityk", l_mn_mo: "politycy" }, { l_poj: "pracownik", l_mn_mo: "pracownicy" },
+
+{ l_poj: "prawnik", l_mn_mo: "prawnicy" }, { l_poj: "rodak", l_mn_mo: "rodacy" },
+
+{ l_poj: "rolnik", l_mn_mo: "rolnicy" }, { l_poj: "Turek", l_mn_mo: "Turcy" },
+
+{ l_poj: "uczestnik", l_mn_mo: "uczestnicy" }, { l_poj: "zawodnik", l_mn_mo: "zawodnicy" },
+
+{ l_poj: "aktor", l_mn_mo: "aktorzy" }, { l_poj: "bloger", l_mn_mo: "blogerzy" },
+
+{ l_poj: "dyrektor", l_mn_mo: "dyrektorzy" }, { l_poj: "fryzjer", l_mn_mo: "fryzjerzy" },
+
+{ l_poj: "inwestor", l_mn_mo: "inwestorzy" }, { l_poj: "kelner", l_mn_mo: "kelnerzy" },
+
+{ l_poj: "premier", l_mn_mo: "premierzy" }, { l_poj: "trener", l_mn_mo: "trenerzy" },
+
+{ l_poj: "Węgier", l_mn_mo: "Węgrzy" }, { l_poj: "badacz", l_mn_mo: "badacze" },
+
+{ l_poj: "gracz", l_mn_mo: "gracze" }, { l_poj: "majsterkowicz", l_mn_mo: "majsterkowicze" },
+
+{ l_poj: "palacz", l_mn_mo: "palacze" }, { l_poj: "słuchacz", l_mn_mo: "słuchacze" },
+
+{ l_poj: "dziennikarz", l_mn_mo: "dziennikarze" }, { l_poj: "lekarz", l_mn_mo: "lekarze" },
+
+{ l_poj: "marynarz", l_mn_mo: "marynarze" }, { l_poj: "piłkarz", l_mn_mo: "piłkarze" },
+
+{ l_poj: "piosenkarz", l_mn_mo: "piosenkarze" }, { l_poj: "pisarz", l_mn_mo: "pisarze" },
+
+{ l_poj: "stolarz", l_mn_mo: "stolarze" }, { l_poj: "tancerz", l_mn_mo: "tancerze" },
+
+{ l_poj: "żołnierz", l_mn_mo: "żołnierze" }, { l_poj: "akcjonariusz", l_mn_mo: "akcjonariusze" },
+
+{ l_poj: "funkcjonariusz", l_mn_mo: "funkcjonariusze" }, { l_poj: "kuracjusz", l_mn_mo: "kuracjusze" },
+
+{ l_poj: "Łotysz", l_mn_mo: "Łotysze" }, { l_poj: "notariusz", l_mn_mo: "notariusze" },
+
+{ l_poj: "wolontariusz", l_mn_mo: "wolontariusze" }, { l_poj: "gość", l_mn_mo: "goście" },
+
+{ l_poj: "leń", l_mn_mo: "lenie" }, { l_poj: "diżej", l_mn_mo: "diżeje" },
+
+{ l_poj: "dżokej", l_mn_mo: "dżokeje" }, { l_poj: "złodziej", l_mn_mo: "złodzieje" },
+
+{ l_poj: "nauczyciel", l_mn_mo: "nauczyciele" }, { l_poj: "obywatel", l_mn_mo: "obywatele" },
+
+{ l_poj: "przedstawiciel", l_mn_mo: "przedstawiciele" }, { l_poj: "przyjaciel", l_mn_mo: "przyjaciele" },
+
+{ l_poj: "ubezpieczyciel", l_mn_mo: "ubezpieczyciele" }, { l_poj: "właściciel", l_mn_mo: "właściciele" },
+
+{ l_poj: "Amerykanin", l_mn_mo: "Amerykanie" }, { l_poj: "chrześcijanin", l_mn_mo: "chrześcijanie" },
+
+{ l_poj: "gdańszczanin", l_mn_mo: "gdańszczanie" }, { l_poj: "krakowianin", l_mn_mo: "krakowianie" },
+
+{ l_poj: "Meksykanin", l_mn_mo: "Meksykanie" }, { l_poj: "muzułmanin", l_mn_mo: "muzułmanie" },
+
+{ l_poj: "Rosjanin", l_mn_mo: "Rosjanie" }, { l_poj: "weganin", l_mn_mo: "weganie" },
+
+{ l_poj: "wegetarianin", l_mn_mo: "wegetarianie" }, { l_poj: "dziadek", l_mn_mo: "dziadkowie" },
+
+{ l_poj: "mąż", l_mn_mo: "mężowie" }, { l_poj: "ojciec", l_mn_mo: "ojcowie" },
+
+{ l_poj: "syn", l_mn_mo: "synowie" }, { l_poj: "teść", l_mn_mo: "teściowie" },
+
+{ l_poj: "ambasador", l_mn_mo: "ambasadorowie" }, { l_poj: "generał", l_mn_mo: "generałowie" },
+
+{ l_poj: "kardynał", l_mn_mo: "kardynałowie" }, { l_poj: "król", l_mn_mo: "królowie" },
+
+{ l_poj: "marszałek", l_mn_mo: "marszałkowie" }, { l_poj: "minister", l_mn_mo: "ministrowie" },
+
+{ l_poj: "pan", l_mn_mo: "panowie" }, { l_poj: "poseł", l_mn_mo: "posłowie" },
+
+{ l_poj: "profesor", l_mn_mo: "profesorowie" }, { l_poj: "sędzia", l_mn_mo: "sędziowie" },
+
+{ l_poj: "szef", l_mn_mo: "szefowie" }, { l_poj: "etnograf", l_mn_mo: "etnografowie" },
+
+{ l_poj: "filozof", l_mn_mo: "filozofowie" }, { l_poj: "fotograf", l_mn_mo: "fotografowie" },
+
+{ l_poj: "Arab", l_mn_mo: "Arabowie" }, { l_poj: "Aztek", l_mn_mo: "Aztekowie" },
+
+{ l_poj: "Belg", l_mn_mo: "Belgowie" }, { l_poj: "Fin", l_mn_mo: "Finowie" },
+
+{ l_poj: "Maj", l_mn_mo: "Majowie" }, { l_poj: "Norweg", l_mn_mo: ["Norwegowie", "Norwedzy"] },
+
+{ l_poj: "Serb", l_mn_mo: "Serbowie" }, { l_poj: "członek", l_mn_mo: "członkowie" },
+
+{ l_poj: "kochanek", l_mn_mo: "kochankowie" }, { l_poj: "nurek", l_mn_mo: "nurkowie" },
+
+{ l_poj: "skoczek", l_mn_mo: "skoczkowie" }, { l_poj: "staruszek", l_mn_mo: "staruszkowie" },
+
+{ l_poj: "świadek", l_mn_mo: "świadkowie" },
+
+{ l_poj: "bohater", l_mn_mo: ["bohaterowie", "bohaterzy"] },
+
+{ l_poj: "bóg", l_mn_mo: "bogowie" }, { l_poj: "mistrz", l_mn_mo: "mistrzowie" },
+
+{ l_poj: "opiekun", l_mn_mo: "opiekunowie" }, { l_poj: "pasażer", l_mn_mo: "pasażerowie" },
+
+{ l_poj: "uczeń", l_mn_mo: "uczniowie" }, { l_poj: "widz", l_mn_mo: "widzowie" },
+
+{ l_poj: "więzień", l_mn_mo: "więźniowie" }, { l_poj: "wróg", l_mn_mo: "wrogowie" },
+
+{ l_poj: "Nowak", l_mn_mo: "Nowakowie" }, { l_poj: "Mazur", l_mn_mo: "Mazurowie" },
+
+{ l_poj: "brat", l_mn_mo: "bracia" }, { l_poj: "człowiek", l_mn_mo: "ludzie" },
+
+{ l_poj: "ksiądz", l_mn_mo: "księża" }, { l_poj: "mężczyzna", l_mn_mo: "mężczyźni" },
+
+{ l_poj: "inżynier", l_mn_mo: ["inżynierowie", "inżynierzy"] }
+
+];
+
+
+const adjectives = [
+
+{ l_poj: "ambitny", l_mn_mo: "ambitni" }, { l_poj: "bezpieczny", l_mn_mo: "bezpieczni" },
+
+{ l_poj: "biedny", l_mn_mo: "biedni" }, { l_poj: "dokładny", l_mn_mo: "dokładni" },
+
+{ l_poj: "empatyczny", l_mn_mo: "empatyczni" }, { l_poj: "kompetentny", l_mn_mo: "kompetentni" },
+
+{ l_poj: "nudny", l_mn_mo: "nudni" }, { l_poj: "odważny", l_mn_mo: "odważni" },
+
+{ l_poj: "samodzielny", l_mn_mo: "samodzielni" }, { l_poj: "skromny", l_mn_mo: "skromni" },
+
+{ l_poj: "smutny", l_mn_mo: "smutni" }, { l_poj: "spokojny", l_mn_mo: "spokojni" },
+
+{ l_poj: "sympatyczny", l_mn_mo: "sympatyczni" }, { l_poj: "wysportowany", l_mn_mo: "wysportowani" },
+
+{ l_poj: "zadowolony", l_mn_mo: "zadowoleni" }, { l_poj: "zmęczony", l_mn_mo: "zmęczeni" },
+
+{ l_poj: "leniwy", l_mn_mo: "leniwi" }, { l_poj: "nerwowy", l_mn_mo: "nerwowi" },
+
+{ l_poj: "niecierpliwy", l_mn_mo: "niecierpliwi" }, { l_poj: "obowiązkowy", l_mn_mo: "obowiązkowi" },
+
+{ l_poj: "pomysłowy", l_mn_mo: "pomysłowi" }, { l_poj: "surowy", l_mn_mo: "surowi" },
+
+{ l_poj: "uczciwy", l_mn_mo: "uczciwi" }, { l_poj: "wrażliwy", l_mn_mo: "wrażliwi" },
+
+{ l_poj: "bosy", l_mn_mo: "bosi" }, { l_poj: "gruby", l_mn_mo: "grubi" },
+
+{ l_poj: "skąpy", l_mn_mo: "skąpi" }, { l_poj: "uprzejmy", l_mn_mo: "uprzejmi" },
+
+{ l_poj: "cichy", l_mn_mo: "cisi" }, { l_poj: "głuchy", l_mn_mo: "głusi" },
+
+{ l_poj: "chudy", l_mn_mo: "chudzi" }, { l_poj: "młody", l_mn_mo: "młodzi" },
+
+{ l_poj: "dojrzały", l_mn_mo: "dojrzali" }, { l_poj: "mały", l_mn_mo: "mali" },
+
+{ l_poj: "miły", l_mn_mo: "mili" }, { l_poj: "nieśmiały", l_mn_mo: "nieśmiali" },
+
+{ l_poj: "otyły", l_mn_mo: "otyli" }, { l_poj: "szczupły", l_mn_mo: "szczupli" },
+
+{ l_poj: "wesoły", l_mn_mo: "weseli" }, { l_poj: "zarozumiały", l_mn_mo: "zarozumiali" },
+
+{ l_poj: "bogatszy", l_mn_mo: "bogatsi" }, { l_poj: "ładniejszy", l_mn_mo: "ładniejsi" },
+
+{ l_poj: "mniejszy", l_mn_mo: "mniejsi" }, { l_poj: "większy", l_mn_mo: "więksi" },
+
+{ l_poj: "bogaty", l_mn_mo: "bogaci" }, { l_poj: "pracowity", l_mn_mo: "pracowici" },
+
+{ l_poj: "spięty", l_mn_mo: "spięci" }, { l_poj: "uparty", l_mn_mo: "uparci" },
+
+{ l_poj: "żonaty", l_mn_mo: "żonaci" }, { l_poj: "barczysty", l_mn_mo: "barczyści" },
+
+{ l_poj: "czysty", l_mn_mo: "czyści" }, { l_poj: "głupi", l_mn_mo: "głupi" },
+
+{ l_poj: "ostatni", l_mn_mo: "ostatni" }, { l_poj: "dorosły", l_mn_mo: "dorośli" },
+
+{ l_poj: "radosny", l_mn_mo: "radośni" }, { l_poj: "zazdrosny", l_mn_mo: "zazdrośni" },
+
+{ l_poj: "przyjazny", l_mn_mo: "przyjaźni" }, { l_poj: "zły", l_mn_mo: "źli" },
+
+{ l_poj: "drogi", l_mn_mo: "drodzy" }, { l_poj: "nagi", l_mn_mo: "nadzy" },
+
+{ l_poj: "angielski", l_mn_mo: "angielscy" }, { l_poj: "arogancki", l_mn_mo: "aroganccy" },
+
+{ l_poj: "brzydki", l_mn_mo: "brzydcy" }, { l_poj: "elegancki", l_mn_mo: "eleganccy" },
+
+{ l_poj: "hiszpański", l_mn_mo: "hiszpańscy" }, { l_poj: "niski", l_mn_mo: "niscy" },
+
+{ l_poj: "polski", l_mn_mo: "polscy" }, { l_poj: "przyjacielski", l_mn_mo: "przyjacielscy" },
+
+{ l_poj: "szybki", l_mn_mo: "szybcy" }, { l_poj: "towarzyski", l_mn_mo: "towarzyscy" },
+
+{ l_poj: "turecki", l_mn_mo: "tureccy" }, { l_poj: "ukraiński", l_mn_mo: "ukraińscy" },
+
+{ l_poj: "włoski", l_mn_mo: "włoscy" }, { l_poj: "wysoki", l_mn_mo: "wysocy" },
+
+{ l_poj: "chory", l_mn_mo: "chorzy" }, { l_poj: "dobry", l_mn_mo: "dobrzy" },
+
+{ l_poj: "mądry", l_mn_mo: "mądrzy" }, { l_poj: "stary", l_mn_mo: "starzy" },
+
+{ l_poj: "interesujący", l_mn_mo: "interesujący" }, { l_poj: "obcy", l_mn_mo: "obcy" },
+
+{ l_poj: "opiekuńczy", l_mn_mo: "opiekuńczy" }, { l_poj: "uroczy", l_mn_mo: "uroczy" },
+
+{ l_poj: "cudzy", l_mn_mo: "cudzy" }, { l_poj: "ryży", l_mn_mo: "ryży" },
+
+{ l_poj: "duży", l_mn_mo: "duzi" }
+
+];
+
+
+// --- Stan Gry ---
+
+let currentScore = 0;
+
+let currentQuestionIndex = 0;
+
+const QUESTIONS_PER_ROUND = 10;
+
+let currentTask; 
+
+let timeLeft = 60; 
+
+const INITIAL_TIME = 60; 
+
+let timerInterval;
+
+
+// --- Dźwięki (Tone.js) ---
+
+let synth;
+
+if (typeof Tone !== 'undefined') {
+
+synth = new Tone.Synth().toDestination();
+
+}
+
+
+function playSound(note, duration = "8n") {
+
+if (synth && Tone.context.state !== 'running') {
+
+Tone.start(); 
+
+}
+
+if (synth) {
+
+try {
+
+synth.triggerAttackRelease(note, duration);
+
+} catch (e) {
+
+console.warn("Tone.js error:", e);
+
+}
+
+}
+
+}
+
+
+
+// --- Funkcje Gry ---
+
+function startGame() {
+
+startScreen.classList.add('hidden');
+
+endScreen.classList.add('hidden');
+
+gameArea.classList.remove('hidden');
+
+
+currentScore = 0;
+
+currentQuestionIndex = 0;
+
+updateScoreDisplay();
+
+totalQuestionsDisplay.textContent = QUESTIONS_PER_ROUND;
+
+nextQuestion();
+
+}
+
+
+function generateQuestion() {
+
+const typeRoll = Math.random();
+
+let taskText, correctAnswer;
+
+
+if (typeRoll < 0.5 && nouns.length > 0) { 
+
+const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
+
+taskText = randomNoun.l_poj;
+
+correctAnswer = randomNoun.l_mn_mo;
+
+currentTask = { type: 'noun', display: taskText, correct: correctAnswer };
+
+} else if (adjectives.length > 0 && nouns.length > 0) { 
+
+const randomAdj = adjectives[Math.floor(Math.random() * adjectives.length)];
+
+const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
+
+taskText = `${randomAdj.l_poj} ${randomNoun.l_poj}`;
+
+const adjPlural = Array.isArray(randomAdj.l_mn_mo) ? randomAdj.l_mn_mo[0] : randomAdj.l_mn_mo; 
+
+if (Array.isArray(randomNoun.l_mn_mo)) {
+
+correctAnswer = randomNoun.l_mn_mo.map(noun_pl => `${adjPlural} ${noun_pl}`);
+
+} else {
+
+correctAnswer = `${adjPlural} ${randomNoun.l_mn_mo}`;
+
+}
+
+currentTask = { type: 'adjNoun', display: taskText, correct: correctAnswer };
+
+} else if (nouns.length > 0) { 
+
+const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
+
+taskText = randomNoun.l_poj;
+
+correctAnswer = randomNoun.l_mn_mo;
+
+currentTask = { type: 'noun', display: taskText, correct: correctAnswer };
+
+}
+
+else { 
+
+questionArea.textContent = "Brak słów!";
+
+return;
+
+}
+
+questionArea.textContent = taskText;
+
+}
+
+
+function nextQuestion() {
+
+currentQuestionIndex++;
+
+if (currentQuestionIndex > QUESTIONS_PER_ROUND) {
+
+endGame();
+
+return;
+
+}
+
+
+updateQuestionCounter();
+
+generateQuestion();
+
+answerInput.value = '';
+
+answerInput.disabled = false;
+
+feedbackDisplay.textContent = '';
+
+feedbackDisplay.className = 'feedback';
+
+checkButton.classList.remove('hidden');
+
+nextButton.classList.add('hidden');
+
+resetTimer();
+
+startTimer();
+
+}
+
+
+function checkAnswer() {
+
+stopTimer();
+
+const userAnswer = answerInput.value.trim().toLowerCase();
+
+let isCorrect = false;
+
+
+if (Array.isArray(currentTask.correct)) {
+
+isCorrect = currentTask.correct.some(ans => ans.toLowerCase() === userAnswer);
+
+} else {
+
+isCorrect = currentTask.correct.toLowerCase() === userAnswer;
+
+}
+
+
+if (isCorrect) {
+
+const pointsEarned = 100 + (timeLeft * 1); 
+
+currentScore += pointsEarned;
+
+feedbackDisplay.textContent = `Poprawnie! +${pointsEarned} pkt`;
+
+feedbackDisplay.classList.add('correct');
+
+playSound("C5");
+
+} else {
+
+currentScore -= 25; 
+
+if (currentScore < 0) currentScore = 0;
+
+const correctAnswerText = Array.isArray(currentTask.correct) ? currentTask.correct.join(' / ') : currentTask.correct;
+
+feedbackDisplay.textContent = `Błąd! Prawidłowa forma: ${correctAnswerText}`;
+
+feedbackDisplay.classList.add('incorrect');
+
+playSound("C4", "4n");
+
+}
+
+
+updateScoreDisplay();
+
+answerInput.disabled = true;
+
+checkButton.classList.add('hidden');
+
+nextButton.classList.remove('hidden');
+
+}
+
+function updateScoreDisplay() {
+
+scoreDisplay.textContent = currentScore;
+
+}
+
+
+function updateQuestionCounter() {
+
+questionCountDisplay.textContent = currentQuestionIndex;
+
+}
+
+
+function startTimer() {
+
+timeLeft = INITIAL_TIME; 
+
+timeLeftDisplay.textContent = timeLeft; 
+
+timerBar.style.width = '100%';
+
+timerBar.style.backgroundColor = '#3498db'; // ZMIANA: Pasek czasu zaczyna od niebieskiego
+
+
+timerInterval = setInterval(() => {
+
+timeLeft--;
+
+timeLeftDisplay.textContent = timeLeft; 
+
+const percentageLeft = (timeLeft / INITIAL_TIME) * 100;
+
+timerBar.style.width = `${percentageLeft}%`;
+
+
+// Zmiana koloru paska czasu 
+
+if (timeLeft <= INITIAL_TIME * 0.25) { 
+
+timerBar.style.backgroundColor = '#d35400'; // ZMIANA: Ciemny pomarańcz (zamiast czerwonego)
+
+} else if (timeLeft <= INITIAL_TIME * 0.5) { 
+
+timerBar.style.backgroundColor = '#f1c40f'; // ZMIANA: Żółty (Sun Flower) (zamiast pomarańczowego)
+
+} else {
+
+timerBar.style.backgroundColor = '#3498db'; // Niebieski
+
+}
+
+
+
+if (timeLeft <= 0) {
+
+stopTimer();
+
+feedbackDisplay.textContent = "Czas minął!";
+
+feedbackDisplay.classList.add('incorrect'); // Użyje koloru .incorrect (ciemny pomarańcz)
+
+playSound("A3", "2n");
+
+checkAnswer(); 
+
+}
+
+}, 1000);
+
+}
+
+
+function stopTimer() {
+
+clearInterval(timerInterval);
+
+}
+
+function resetTimer() {
+
+stopTimer();
+
+timeLeft = INITIAL_TIME; 
+
+timeLeftDisplay.textContent = timeLeft; 
+
+timerBar.style.width = '100%';
+
+timerBar.style.backgroundColor = '#3498db'; // ZMIANA: Resetuje do niebieskiego
+
+}
+
+
+function endGame() {
+
+gameArea.classList.add('hidden');
+
+endScreen.classList.remove('hidden');
+
+finalScoreDisplay.textContent = currentScore;
+
+playSound("G5", "2n");
+
+}
+
+
+// --- Event Listeners ---
+
+startButton.addEventListener('click', startGame);
+
+restartButton.addEventListener('click', startGame);
+
+checkButton.addEventListener('click', checkAnswer);
+
+nextButton.addEventListener('click', nextQuestion);
+
+answerInput.addEventListener('keypress', function(event) {
+
+if (event.key === 'Enter' && !answerInput.disabled) {
+
+checkAnswer();
+
+}
+
+});
+
+</script>
+
+</body>
+
+</html>
+
+```
