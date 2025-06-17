@@ -3,406 +3,566 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zaimki</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Mistrzowie Mianownika</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-dark: #111827;
-            --text-dark: #e5e7eb;
-            --card-bg-dark: rgba(31, 41, 55, 0.5);
-            --border-dark: rgba(255, 255, 255, 0.2);
-
-            --bg-light: #f3f4f6;
-            --text-light: #1f2937;
-            --card-bg-light: rgba(255, 255, 255, 0.6);
-            --border-light: rgba(0, 0, 0, 0.1);
-        }
-
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-dark);
-            transition: background-color 0.3s, color 0.3s;
+            font-family: 'Press Start 2P', cursive;
+            background-color: #2c3e50; /* Ciemnoszary niebieski */
+            color: #ecf0f1; /* Jasnoszary */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
         }
 
-        body.light {
-            background-color: var(--bg-light);
-            color: var(--text-light);
+        .game-container {
+            background-color: #34495e; /* Ciemniejszy niebiesko-szary */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            width: 90%;
+            max-width: 600px;
+        }
+
+        h1 {
+            color: #e67e22; /* Pomarańczowy */
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px #c0392b; /* Ciemniejszy czerwony cień */
+        }
+
+        .info-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+
+        .score, .question-counter, .timer {
+            background-color: #2c3e50;
+            padding: 10px;
+            border-radius: 5px;
         }
         
-        .glass-card {
-            background-color: var(--card-bg-dark);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border-radius: 1.5rem;
-            border: 1px solid var(--border-dark);
-            transition: background-color 0.3s, border-color 0.3s;
+        .timer-bar-container {
+            width: 100%;
+            height: 20px;
+            background-color: #7f8c8d; /* Szary */
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
         }
 
-        body.light .glass-card {
-            background-color: var(--card-bg-light);
-            border-color: var(--border-light);
+        .timer-bar {
+            height: 100%;
+            width: 100%;
+            background-color: #2ecc71; /* Zielony */
+            border-radius: 5px;
+            transition: width 0.1s linear;
         }
 
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, #4f46e5, #f97316);
-            background-size: 400% 400%;
-            animation: gradient-animation 15s ease infinite;
-            z-index: -1;
-            opacity: 0.4;
+        .question-area {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #c0392b; /* Czerwony */
+            border-radius: 5px;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        body.light::before {
-            opacity: 0.2;
+        input[type="text"] {
+            font-family: 'Press Start 2P', cursive;
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #e67e22;
+            border-radius: 5px;
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            font-size: 1em;
         }
 
-        @keyframes gradient-animation {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        button {
+            font-family: 'Press Start 2P', cursive;
+            background-color: #e67e22; /* Pomarańczowy */
+            color: #ecf0f1;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+            margin: 5px;
+            box-shadow: 0 4px #c0392b; /* Ciemniejszy czerwony cień */
+            transform: translateY(0);
         }
 
-        .toggle-checkbox:checked { right: 0; border-color: #68D391; }
-        .toggle-checkbox:checked + .toggle-label { background-color: #68D391; }
+        button:hover {
+            background-color: #d35400; /* Ciemniejszy pomarańczowy */
+        }
+        button:active {
+            box-shadow: 0 2px #c0392b;
+            transform: translateY(2px);
+        }
+
+
+        .feedback {
+            margin-top: 15px;
+            font-size: 1.1em;
+            min-height: 30px;
+        }
+
+        .correct {
+            color: #2ecc71; /* Zielony */
+        }
+
+        .incorrect {
+            color: #e74c3c; /* Czerwony */
+        }
         
-        .btn-answer.correct { animation: correct-pulse 0.5s; background-color: rgba(16, 185, 129, 0.3) !important; border-color: #10B981 !important; }
-        .btn-answer.incorrect { animation: incorrect-shake 0.5s; background-color: rgba(239, 68, 68, 0.3) !important; border-color: #EF4444 !important; }
+        .start-screen, .end-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
 
-        @keyframes correct-pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-        @keyframes incorrect-shake { 0%, 100% { transform: translateX(0); } 10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); } 20%, 40%, 60%, 80% { transform: translateX(5px); } }
-        
-        #reviewModal { transition: opacity 0.3s ease; }
+        .hidden {
+            display: none !important;
+        }
+
+        /* Style dla małych ekranów */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.5em;
+            }
+            .info-bar {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .question-area {
+                font-size: 1.2em;
+            }
+            input[type="text"], button {
+                font-size: 0.9em;
+            }
+        }
 
     </style>
 </head>
-<body class="dark">
+<body>
+    <div class="game-container">
+        <h1>Mistrzowie Mianownika</h1>
 
-    <!-- Top Right Controls -->
-    <div class="absolute top-4 right-4 flex items-center space-x-4 z-10">
-        <!-- Mute Button -->
-        <button id="mute-button" class="text-white/70 hover:text-white transition-colors">
-            <svg id="sound-on-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume-2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
-            <svg id="sound-off-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume-x hidden"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/></svg>
-        </button>
+        <div id="startScreen" class="start-screen">
+            <p>Witaj w grze "Mistrzowie Mianownika"!</p>
+            <p>Podaj poprawną formę mianownika liczby mnogiej rodzaju męskoosobowego.</p>
+            <button id="startButton">Start</button>
+        </div>
 
-        <!-- Theme Switcher -->
-        <div class="flex items-center space-x-2 text-sm">
-            <span>☀️</span>
-            <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
-                <input type="checkbox" name="toggle" id="theme-toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"/>
-                <label for="theme-toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+        <div id="gameArea" class="hidden">
+            <div class="info-bar">
+                <div class="score">Wynik: <span id="score">0</span></div>
+                <div class="question-counter">Pytanie: <span id="questionCount">0</span>/<span id="totalQuestions">0</span></div>
             </div>
-            <span>🌙</span>
+            
+            <div class="timer-bar-container">
+                <div id="timerBar" class="timer-bar"></div>
+            </div>
+            <div id="timerDisplay" class="timer">Czas: <span id="timeLeft">60</span>s</div>
+
+
+            <div id="questionArea" class="question-area"></div>
+            <input type="text" id="answerInput" placeholder="Wpisz odpowiedź...">
+            <button id="checkButton">Sprawdź</button>
+            <button id="nextButton" class="hidden">Następne</button>
+            <div id="feedback" class="feedback"></div>
+        </div>
+
+        <div id="endScreen" class="end-screen hidden">
+            <h2>Koniec Gry!</h2>
+            <p>Twój ostateczny wynik: <span id="finalScore">0</span></p>
+            <button id="restartButton">Zagraj Ponownie</button>
         </div>
     </div>
 
-    <main class="min-h-screen w-full flex items-center justify-center p-4">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
+    <script>
+        // --- Elementy DOM ---
+        const startScreen = document.getElementById('startScreen');
+        const gameArea = document.getElementById('gameArea');
+        const endScreen = document.getElementById('endScreen');
 
-        <!-- Start Screen -->
-        <div id="start-screen" class="glass-card p-8 md:p-12 text-center w-full max-w-2xl">
-            <h1 class="text-4xl md:text-5xl font-bold mb-4">Zaimki</h1>
-            <p class="text-lg md:text-xl mb-8 opacity-80">Sprawdź swoją wiedzę na temat krótkich i długich form zaimków w języku polskim. Wybierz poprawną odpowiedź w każdym z pytań.</p>
-            <button id="start-button" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">Rozpocznij grę</button>
-        </div>
-
-        <!-- Quiz Screen -->
-        <div id="quiz-screen" class="hidden w-full max-w-3xl">
-            <div class="glass-card p-6 md:p-10">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-xl font-semibold">Pytanie</h2>
-                    <div id="progress-text" class="text-lg font-mono"></div>
-                </div>
-                <div class="w-full bg-white/10 rounded-full h-2.5 mb-6">
-                    <div id="progress-bar" class="bg-green-500 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
-                </div>
-                <p id="question-text" class="text-2xl md:text-3xl font-medium mb-8 min-h-[100px] flex items-center"></p>
-                <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-            </div>
-        </div>
-
-        <!-- Results Screen -->
-        <div id="results-screen" class="hidden glass-card p-8 md:p-12 text-center w-full max-w-2xl">
-            <h1 class="text-4xl font-bold mb-2">Koniec Gry!</h1>
-            <p class="text-2xl mb-6">Twój wynik:</p>
-            <p id="score-text" class="text-7xl font-bold text-green-400 mb-8"></p>
-            
-            <div class="flex flex-col md:flex-row justify-center gap-4 mt-8">
-                <button id="retry-incorrect-button" class="hidden bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-3 px-6 rounded-full transition-transform transform hover:scale-105">Popraw błędy</button>
-                <button id="review-button" class="hidden bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-full transition-transform transform hover:scale-105">Zobacz błędy</button>
-                <button id="play-again-button" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-6 rounded-full transition-transform transform hover:scale-105">Zagraj jeszcze raz</button>
-            </div>
-        </div>
-    </main>
-    
-    <!-- Review Modal -->
-    <div id="reviewModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 hidden opacity-0 z-50" onclick="this.classList.add('hidden', 'opacity-0')">
-        <div class="glass-card max-w-3xl w-full max-h-[80vh] overflow-y-auto p-8" onclick="event.stopPropagation()">
-            <h2 class="text-3xl font-bold mb-6 text-center">Twoje błędy</h2>
-            <div id="review-content" class="space-y-6"></div>
-            <button class="mt-8 mx-auto block bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-6 rounded-full" onclick="document.getElementById('reviewModal').classList.add('hidden', 'opacity-0')">Zamknij</button>
-        </div>
-    </div>
-    
-    <script type="module">
-        // --- DOM Elements ---
-        const startScreen = document.getElementById('start-screen');
-        const quizScreen = document.getElementById('quiz-screen');
-        const resultsScreen = document.getElementById('results-screen');
-
-        const startButton = document.getElementById('start-button');
-        const playAgainButton = document.getElementById('play-again-button');
-        const reviewButton = document.getElementById('review-button');
-        const retryIncorrectButton = document.getElementById('retry-incorrect-button');
+        const startButton = document.getElementById('startButton');
+        const checkButton = document.getElementById('checkButton');
+        const nextButton = document.getElementById('nextButton');
+        const restartButton = document.getElementById('restartButton');
         
-        const questionText = document.getElementById('question-text');
-        const optionsContainer = document.getElementById('options-container');
-        const progressText = document.getElementById('progress-text');
-        const progressBar = document.getElementById('progress-bar');
-        const scoreText = document.getElementById('score-text');
+        const scoreDisplay = document.getElementById('score');
+        const questionCountDisplay = document.getElementById('questionCount');
+        const totalQuestionsDisplay = document.getElementById('totalQuestions');
+        const timerBar = document.getElementById('timerBar');
+        const timeLeftDisplay = document.getElementById('timeLeft'); // Zmieniono z timerDisplay na timeLeftDisplay dla spójności
         
-        const reviewModal = document.getElementById('reviewModal');
-        const reviewContent = document.getElementById('review-content');
+        const questionArea = document.getElementById('questionArea');
+        const answerInput = document.getElementById('answerInput');
+        const feedbackDisplay = document.getElementById('feedback');
+        const finalScoreDisplay = document.getElementById('finalScore');
 
-        const themeToggle = document.getElementById('theme-toggle');
-        const muteButton = document.getElementById('mute-button');
-        const soundOnIcon = document.getElementById('sound-on-icon');
-        const soundOffIcon = document.getElementById('sound-off-icon');
-
-        // --- Audio State ---
-        let audioContext;
-        let isMuted = false;
-
-        // --- Sound Generation ---
-        function initAudio() {
-            if (!audioContext) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            }
-        }
-
-        function playSound(type) {
-            if (!audioContext || isMuted) return;
-
-            const now = audioContext.currentTime;
-            const gainNode = audioContext.createGain();
-            gainNode.gain.setValueAtTime(0, now);
-            
-            if (type === 'correct') {
-                const osc = audioContext.createOscillator();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(600, now);
-                osc.frequency.linearRampToValueAtTime(800, now + 0.1);
-                gainNode.gain.linearRampToValueAtTime(0.3, now + 0.01);
-                gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.2);
-                osc.connect(gainNode).connect(audioContext.destination);
-                osc.start(now);
-                osc.stop(now + 0.2);
-            } else if (type === 'incorrect') {
-                const osc = audioContext.createOscillator();
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(200, now);
-                osc.frequency.exponentialRampToValueAtTime(100, now + 0.15);
-                gainNode.gain.linearRampToValueAtTime(0.25, now + 0.01);
-                gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.25);
-                osc.connect(gainNode).connect(audioContext.destination);
-                osc.start(now);
-                osc.stop(now + 0.25);
-            } else if (type === 'click') {
-                const osc = audioContext.createOscillator();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(440, now);
-                gainNode.gain.linearRampToValueAtTime(0.5, now + 0.01);
-                gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.1);
-                osc.connect(gainNode).connect(audioContext.destination);
-                osc.start(now);
-                osc.stop(now + 0.1);
-            }
-        }
-        
-        // --- Questions Database ---
-        const allQuestions = [
-            // Ćwiczenie 1 (je/ich) - 5
-            { question: "Lubię czytać książki. Lubię ___ czytać.", options: ["je", "ich"], answer: "je" },
-            { question: "Chciałabym poznać twoich przyjaciół. Chciałabym ___ poznać.", options: ["je", "ich"], answer: "ich" },
-            { question: "Niania obserwuje dzieci. Niania ___ obserwuje.", options: ["je", "ich"], answer: "je" },
-            { question: "Znasz jakieś polskie aktorki? Znasz ___?", options: ["je", "ich"], answer: "je" },
-            { question: "Widziałam w sklepie świetne nowe komputery. Widziałam ___ w sklepie.", options: ["je", "ich"], answer: "je" }, // CORRECTED
-            // Ćwiczenie 1 (różne formy) - 5
-            { question: "___ nigdy nie boli głowa.", options: ["Mi", "Mnie"], answer: "Mnie" },
-            { question: "Ona ___ nigdy nie zdradzi.", options: ["ci", "ciebie", "cię"], answer: "cię" },
-            { question: "To przykra scena, gdy ___ obrażają.", options: ["jej", "ją"], answer: "ją" },
-            { question: "Matka dobrze się ___ opiekowała.", options: ["nią", "jej", "niej"], answer: "nią" },
-            { question: "Co tam u ___ słychać?", options: ["ciebie", "cię"], answer: "ciebie" },
-            // Ćwiczenie 1 (cię/ciebie) - 5
-            { question: "Lubię tylko ___.", options: ["cię", "ciebie"], answer: "ciebie" },
-            { question: "Cenię ___ bardzo za to, jaka jesteś.", options: ["cię", "ciebie"], answer: "cię" },
-            { question: "Kocham nie jego, a ___.", options: ["cię", "ciebie"], answer: "ciebie" },
-            { question: "Słuchaliśmy ___ uważnie.", options: ["cię", "ciebie"], answer: "cię" },
-            { question: "Proszę ___ o pomoc.", options: ["cię", "ciebie"], answer: "cię" },
-            // Ćwiczenie 3 (ci/tobie) - 5
-            { question: "Zaufam ___!", options: ["ci", "tobie"], answer: "ci" },
-            { question: "Zaufam najbardziej ___!", options: ["ci", "tobie"], answer: "tobie" },
-            { question: "Chcę ___ opisać śmieszną sytuację.", options: ["ci", "tobie"], answer: "ci" },
-            { question: "Życzę ___ zdrowia i szczęścia!", options: ["ci", "tobie"], answer: "ci" },
-            { question: "Gratuluję ___ nowej książki!", options: ["ci", "tobie"], answer: "ci" },
-            // Ćwiczenie 4 (z 'n' lub bez) - 5
-            { question: "Bartek choruje na choroby górnych dróg oddechowych. Ciągle na ___ choruje.", options: ["nie", "nich"], answer: "nie" },
-            { question: "Wstąpimy do sklepu po nowe rybki. Wstąpimy po ___.", options: ["nie", "nich"], answer: "nie" },
-            { question: "Marek starał się o nowe zlecenia. Marek starał się o ___.", options: ["nie", "nich"], answer: "nie" },
-            { question: "Pielęgniarka troszczy się o swoich starszych pacjentów. Troszczy się o ___.", options: ["nie", "nich"], answer: "nich" },
-            { question: "Marta martwi się o swoich rodziców. Martwi się o ___.", options: ["nie", "nich"], answer: "nich" },
+        // --- Dane Gry (z PDF) ---
+        const nouns = [
+            { l_poj: "Czech", l_mn_mo: "Czesi" }, { l_poj: "Włoch", l_mn_mo: "Włosi" },
+            { l_poj: "sąsiad", l_mn_mo: "sąsiedzi" }, { l_poj: "Szwed", l_mn_mo: "Szwedzi" },
+            { l_poj: "Żyd", l_mn_mo: "Żydzi" }, { l_poj: "ortopeda", l_mn_mo: "ortopedzi" },
+            { l_poj: "architekt", l_mn_mo: "architekci" }, { l_poj: "ekspert", l_mn_mo: "eksperci" },
+            { l_poj: "emeryt", l_mn_mo: "emeryci" }, { l_poj: "emigrant", l_mn_mo: "emigranci" },
+            { l_poj: "klient", l_mn_mo: "klienci" }, { l_poj: "komendant", l_mn_mo: "komendanci" },
+            { l_poj: "konsument", l_mn_mo: "konsumenci" }, { l_poj: "kursant", l_mn_mo: "kursanci" },
+            { l_poj: "laureat", l_mn_mo: "laureaci" }, { l_poj: "pacjent", l_mn_mo: "pacjenci" },
+            { l_poj: "pasjonat", l_mn_mo: "pasjonaci" }, { l_poj: "pilot", l_mn_mo: "piloci" },
+            { l_poj: "policjant", l_mn_mo: "policjanci" }, { l_poj: "producent", l_mn_mo: "producenci" },
+            { l_poj: "reprezentant", l_mn_mo: "reprezentanci" }, { l_poj: "student", l_mn_mo: "studenci" },
+            { l_poj: "astronauta", l_mn_mo: "astronauci" }, { l_poj: "Azjata", l_mn_mo: "Azjaci" },
+            { l_poj: "fizjoterapeuta", l_mn_mo: "fizjoterapeuci" }, { l_poj: "poeta", l_mn_mo: "poeci" },
+            { l_poj: "artysta", l_mn_mo: "artyści" }, { l_poj: "dentysta", l_mn_mo: "dentyści" },
+            { l_poj: "ekonomista", l_mn_mo: "ekonomiści" }, { l_poj: "masażysta", l_mn_mo: "masażyści" },
+            { l_poj: "maturzysta", l_mn_mo: "maturzyści" }, { l_poj: "programista", l_mn_mo: "programiści" },
+            { l_poj: "rowerzysta", l_mn_mo: "rowerzyści" }, { l_poj: "specjalista", l_mn_mo: "specjaliści" },
+            { l_poj: "turysta", l_mn_mo: "turyści" }, { l_poj: "Białorusin", l_mn_mo: "Białorusini" },
+            { l_poj: "biznesmen", l_mn_mo: "biznesmeni" }, { l_poj: "chłop", l_mn_mo: "chłopi" },
+            { l_poj: "Francuz", l_mn_mo: "Francuzi" }, { l_poj: "klaun", l_mn_mo: "klauni" },
+            { l_poj: "kuzyn", l_mn_mo: "kuzyni" }, { l_poj: "Litwin", l_mn_mo: "Litwini" },
+            { l_poj: "pielgrzym", l_mn_mo: "pielgrzymi" }, { l_poj: "prezes", l_mn_mo: "prezesi" },
+            { l_poj: "Hiszpan", l_mn_mo: "Hiszpanie" }, { l_poj: "doradca", l_mn_mo: "doradcy" },
+            { l_poj: "kierowca", l_mn_mo: "kierowcy" }, { l_poj: "kredytobiorca", l_mn_mo: "kredytobiorcy" },
+            { l_poj: "mówca", l_mn_mo: "mówcy" }, { l_poj: "najemca", l_mn_mo: "najemcy" },
+            { l_poj: "obrońca", l_mn_mo: "obrońcy" }, { l_poj: "pracodawca", l_mn_mo: "pracodawcy" },
+            { l_poj: "przedsiębiorca", l_mn_mo: "przedsiębiorcy" }, { l_poj: "rozmówca", l_mn_mo: "rozmówcy" },
+            { l_poj: "sprzedawca", l_mn_mo: "sprzedawcy" }, { l_poj: "twórca", l_mn_mo: "twórcy" },
+            { l_poj: "budowlaniec", l_mn_mo: "budowlańcy" }, { l_poj: "chłopiec", l_mn_mo: "chłopcy" },
+            { l_poj: "cudzoziemiec", l_mn_mo: "cudzoziemcy" }, { l_poj: "mieszkaniec", l_mn_mo: "mieszkańcy" },
+            { l_poj: "naukowiec", l_mn_mo: "naukowcy" }, { l_poj: "Niemiec", l_mn_mo: "Niemcy" },
+            { l_poj: "nowożeniec", l_mn_mo: "nowożeńcy" }, { l_poj: "obcokrajowiec", l_mn_mo: "obcokrajowcy" },
+            { l_poj: "sportowiec", l_mn_mo: "sportowcy" }, { l_poj: "Ukrainiec", l_mn_mo: "Ukraińcy" },
+            { l_poj: "chirurg", l_mn_mo: "chirurdzy" }, { l_poj: "ekolog", l_mn_mo: "ekolodzy" },
+            { l_poj: "pedagog", l_mn_mo: "pedagodzy" },
+            { l_poj: "psycholog", l_mn_mo: ["psycholodzy", "psychologowie"] },
+            { l_poj: "kolega", l_mn_mo: "koledzy" }, { l_poj: "analityk", l_mn_mo: "analitycy" },
+            { l_poj: "Chińczyk", l_mn_mo: "Chińczycy" }, { l_poj: "Grek", l_mn_mo: "Grecy" },
+            { l_poj: "informatyk", l_mn_mo: "informatycy" }, { l_poj: "muzyk", l_mn_mo: "muzycy" },
+            { l_poj: "podatnik", l_mn_mo: "podatnicy" }, { l_poj: "Polak", l_mn_mo: "Polacy" },
+            { l_poj: "polityk", l_mn_mo: "politycy" }, { l_poj: "pracownik", l_mn_mo: "pracownicy" },
+            { l_poj: "prawnik", l_mn_mo: "prawnicy" }, { l_poj: "rodak", l_mn_mo: "rodacy" },
+            { l_poj: "rolnik", l_mn_mo: "rolnicy" }, { l_poj: "Turek", l_mn_mo: "Turcy" },
+            { l_poj: "uczestnik", l_mn_mo: "uczestnicy" }, { l_poj: "zawodnik", l_mn_mo: "zawodnicy" },
+            { l_poj: "aktor", l_mn_mo: "aktorzy" }, { l_poj: "bloger", l_mn_mo: "blogerzy" },
+            { l_poj: "dyrektor", l_mn_mo: "dyrektorzy" }, { l_poj: "fryzjer", l_mn_mo: "fryzjerzy" },
+            { l_poj: "inwestor", l_mn_mo: "inwestorzy" }, { l_poj: "kelner", l_mn_mo: "kelnerzy" },
+            { l_poj: "premier", l_mn_mo: "premierzy" }, { l_poj: "trener", l_mn_mo: "trenerzy" },
+            { l_poj: "Węgier", l_mn_mo: "Węgrzy" }, { l_poj: "badacz", l_mn_mo: "badacze" },
+            { l_poj: "gracz", l_mn_mo: "gracze" }, { l_poj: "majsterkowicz", l_mn_mo: "majsterkowicze" },
+            { l_poj: "palacz", l_mn_mo: "palacze" }, { l_poj: "słuchacz", l_mn_mo: "słuchacze" },
+            { l_poj: "dziennikarz", l_mn_mo: "dziennikarze" }, { l_poj: "lekarz", l_mn_mo: "lekarze" },
+            { l_poj: "marynarz", l_mn_mo: "marynarze" }, { l_poj: "piłkarz", l_mn_mo: "piłkarze" },
+            { l_poj: "piosenkarz", l_mn_mo: "piosenkarze" }, { l_poj: "pisarz", l_mn_mo: "pisarze" },
+            { l_poj: "stolarz", l_mn_mo: "stolarze" }, { l_poj: "tancerz", l_mn_mo: "tancerze" },
+            { l_poj: "żołnierz", l_mn_mo: "żołnierze" }, { l_poj: "akcjonariusz", l_mn_mo: "akcjonariusze" },
+            { l_poj: "funkcjonariusz", l_mn_mo: "funkcjonariusze" }, { l_poj: "kuracjusz", l_mn_mo: "kuracjusze" },
+            { l_poj: "Łotysz", l_mn_mo: "Łotysze" }, { l_poj: "notariusz", l_mn_mo: "notariusze" },
+            { l_poj: "wolontariusz", l_mn_mo: "wolontariusze" }, { l_poj: "gość", l_mn_mo: "goście" },
+            { l_poj: "leń", l_mn_mo: "lenie" }, { l_poj: "diżej", l_mn_mo: "diżeje" },
+            { l_poj: "dżokej", l_mn_mo: "dżokeje" }, { l_poj: "złodziej", l_mn_mo: "złodzieje" },
+            { l_poj: "nauczyciel", l_mn_mo: "nauczyciele" }, { l_poj: "obywatel", l_mn_mo: "obywatele" },
+            { l_poj: "przedstawiciel", l_mn_mo: "przedstawiciele" }, { l_poj: "przyjaciel", l_mn_mo: "przyjaciele" },
+            { l_poj: "ubezpieczyciel", l_mn_mo: "ubezpieczyciele" }, { l_poj: "właściciel", l_mn_mo: "właściciele" },
+            { l_poj: "Amerykanin", l_mn_mo: "Amerykanie" }, { l_poj: "chrześcijanin", l_mn_mo: "chrześcijanie" },
+            { l_poj: "gdańszczanin", l_mn_mo: "gdańszczanie" }, { l_poj: "krakowianin", l_mn_mo: "krakowianie" },
+            { l_poj: "Meksykanin", l_mn_mo: "Meksykanie" }, { l_poj: "muzułmanin", l_mn_mo: "muzułmanie" },
+            { l_poj: "Rosjanin", l_mn_mo: "Rosjanie" }, { l_poj: "weganin", l_mn_mo: "weganie" },
+            { l_poj: "wegetarianin", l_mn_mo: "wegetarianie" }, { l_poj: "dziadek", l_mn_mo: "dziadkowie" },
+            { l_poj: "mąż", l_mn_mo: "mężowie" }, { l_poj: "ojciec", l_mn_mo: "ojcowie" },
+            { l_poj: "syn", l_mn_mo: "synowie" }, { l_poj: "teść", l_mn_mo: "teściowie" },
+            { l_poj: "ambasador", l_mn_mo: "ambasadorowie" }, { l_poj: "generał", l_mn_mo: "generałowie" },
+            { l_poj: "kardynał", l_mn_mo: "kardynałowie" }, { l_poj: "król", l_mn_mo: "królowie" },
+            { l_poj: "marszałek", l_mn_mo: "marszałkowie" }, { l_poj: "minister", l_mn_mo: "ministrowie" },
+            { l_poj: "pan", l_mn_mo: "panowie" }, { l_poj: "poseł", l_mn_mo: "posłowie" },
+            { l_poj: "profesor", l_mn_mo: "profesorowie" }, { l_poj: "sędzia", l_mn_mo: "sędziowie" },
+            { l_poj: "szef", l_mn_mo: "szefowie" }, { l_poj: "etnograf", l_mn_mo: "etnografowie" },
+            { l_poj: "filozof", l_mn_mo: "filozofowie" }, { l_poj: "fotograf", l_mn_mo: "fotografowie" },
+            { l_poj: "Arab", l_mn_mo: "Arabowie" }, { l_poj: "Aztek", l_mn_mo: "Aztekowie" },
+            { l_poj: "Belg", l_mn_mo: "Belgowie" }, { l_poj: "Fin", l_mn_mo: "Finowie" },
+            { l_poj: "Maj", l_mn_mo: "Majowie" }, { l_poj: "Norweg", l_mn_mo: ["Norwegowie", "Norwedzy"] },
+            { l_poj: "Serb", l_mn_mo: "Serbowie" }, { l_poj: "członek", l_mn_mo: "członkowie" },
+            { l_poj: "kochanek", l_mn_mo: "kochankowie" }, { l_poj: "nurek", l_mn_mo: "nurkowie" },
+            { l_poj: "skoczek", l_mn_mo: "skoczkowie" }, { l_poj: "staruszek", l_mn_mo: "staruszkowie" },
+            { l_poj: "świadek", l_mn_mo: "świadkowie" },
+            { l_poj: "bohater", l_mn_mo: ["bohaterowie", "bohaterzy"] },
+            { l_poj: "bóg", l_mn_mo: "bogowie" }, { l_poj: "mistrz", l_mn_mo: "mistrzowie" },
+            { l_poj: "opiekun", l_mn_mo: "opiekunowie" }, { l_poj: "pasażer", l_mn_mo: "pasażerowie" },
+            { l_poj: "uczeń", l_mn_mo: "uczniowie" }, { l_poj: "widz", l_mn_mo: "widzowie" },
+            { l_poj: "więzień", l_mn_mo: "więźniowie" }, { l_poj: "wróg", l_mn_mo: "wrogowie" },
+            { l_poj: "Nowak", l_mn_mo: "Nowakowie" }, { l_poj: "Mazur", l_mn_mo: "Mazurowie" },
+            { l_poj: "brat", l_mn_mo: "bracia" }, { l_poj: "człowiek", l_mn_mo: "ludzie" },
+            { l_poj: "ksiądz", l_mn_mo: "księża" }, { l_poj: "mężczyzna", l_mn_mo: "mężczyźni" },
+            { l_poj: "inżynier", l_mn_mo: ["inżynierowie", "inżynierzy"] }
         ];
 
-        // --- Game State ---
-        let currentQuestions = [];
-        let currentQuestionIndex = 0;
-        let score = 0;
-        let incorrectAnswers = [];
+        const adjectives = [
+            { l_poj: "ambitny", l_mn_mo: "ambitni" }, { l_poj: "bezpieczny", l_mn_mo: "bezpieczni" },
+            { l_poj: "biedny", l_mn_mo: "biedni" }, { l_poj: "dokładny", l_mn_mo: "dokładni" },
+            { l_poj: "empatyczny", l_mn_mo: "empatyczni" }, { l_poj: "kompetentny", l_mn_mo: "kompetentni" },
+            { l_poj: "nudny", l_mn_mo: "nudni" }, { l_poj: "odważny", l_mn_mo: "odważni" },
+            { l_poj: "samodzielny", l_mn_mo: "samodzielni" }, { l_poj: "skromny", l_mn_mo: "skromni" },
+            { l_poj: "smutny", l_mn_mo: "smutni" }, { l_poj: "spokojny", l_mn_mo: "spokojni" },
+            { l_poj: "sympatyczny", l_mn_mo: "sympatyczni" }, { l_poj: "wysportowany", l_mn_mo: "wysportowani" },
+            { l_poj: "zadowolony", l_mn_mo: "zadowoleni" }, { l_poj: "zmęczony", l_mn_mo: "zmęczeni" },
+            { l_poj: "leniwy", l_mn_mo: "leniwi" }, { l_poj: "nerwowy", l_mn_mo: "nerwowi" },
+            { l_poj: "niecierpliwy", l_mn_mo: "niecierpliwi" }, { l_poj: "obowiązkowy", l_mn_mo: "obowiązkowi" },
+            { l_poj: "pomysłowy", l_mn_mo: "pomysłowi" }, { l_poj: "surowy", l_mn_mo: "surowi" },
+            { l_poj: "uczciwy", l_mn_mo: "uczciwi" }, { l_poj: "wrażliwy", l_mn_mo: "wrażliwi" },
+            { l_poj: "bosy", l_mn_mo: "bosi" }, { l_poj: "gruby", l_mn_mo: "grubi" },
+            { l_poj: "skąpy", l_mn_mo: "skąpi" }, { l_poj: "uprzejmy", l_mn_mo: "uprzejmi" },
+            { l_poj: "cichy", l_mn_mo: "cisi" }, { l_poj: "głuchy", l_mn_mo: "głusi" },
+            { l_poj: "chudy", l_mn_mo: "chudzi" }, { l_poj: "młody", l_mn_mo: "młodzi" },
+            { l_poj: "dojrzały", l_mn_mo: "dojrzali" }, { l_poj: "mały", l_mn_mo: "mali" },
+            { l_poj: "miły", l_mn_mo: "mili" }, { l_poj: "nieśmiały", l_mn_mo: "nieśmiali" },
+            { l_poj: "otyły", l_mn_mo: "otyli" }, { l_poj: "szczupły", l_mn_mo: "szczupli" },
+            { l_poj: "wesoły", l_mn_mo: "weseli" }, { l_poj: "zarozumiały", l_mn_mo: "zarozumiali" },
+            { l_poj: "bogatszy", l_mn_mo: "bogatsi" }, { l_poj: "ładniejszy", l_mn_mo: "ładniejsi" },
+            { l_poj: "mniejszy", l_mn_mo: "mniejsi" }, { l_poj: "większy", l_mn_mo: "więksi" },
+            { l_poj: "bogaty", l_mn_mo: "bogaci" }, { l_poj: "pracowity", l_mn_mo: "pracowici" },
+            { l_poj: "spięty", l_mn_mo: "spięci" }, { l_poj: "uparty", l_mn_mo: "uparci" },
+            { l_poj: "żonaty", l_mn_mo: "żonaci" }, { l_poj: "barczysty", l_mn_mo: "barczyści" },
+            { l_poj: "czysty", l_mn_mo: "czyści" }, { l_poj: "głupi", l_mn_mo: "głupi" },
+            { l_poj: "ostatni", l_mn_mo: "ostatni" }, { l_poj: "dorosły", l_mn_mo: "dorośli" },
+            { l_poj: "radosny", l_mn_mo: "radośni" }, { l_poj: "zazdrosny", l_mn_mo: "zazdrośni" },
+            { l_poj: "przyjazny", l_mn_mo: "przyjaźni" }, { l_poj: "zły", l_mn_mo: "źli" },
+            { l_poj: "drogi", l_mn_mo: "drodzy" }, { l_poj: "nagi", l_mn_mo: "nadzy" },
+            { l_poj: "angielski", l_mn_mo: "angielscy" }, { l_poj: "arogancki", l_mn_mo: "aroganccy" },
+            { l_poj: "brzydki", l_mn_mo: "brzydcy" }, { l_poj: "elegancki", l_mn_mo: "eleganccy" },
+            { l_poj: "hiszpański", l_mn_mo: "hiszpańscy" }, { l_poj: "niski", l_mn_mo: "niscy" },
+            { l_poj: "polski", l_mn_mo: "polscy" }, { l_poj: "przyjacielski", l_mn_mo: "przyjacielscy" },
+            { l_poj: "szybki", l_mn_mo: "szybcy" }, { l_poj: "towarzyski", l_mn_mo: "towarzyscy" },
+            { l_poj: "turecki", l_mn_mo: "tureccy" }, { l_poj: "ukraiński", l_mn_mo: "ukraińscy" },
+            { l_poj: "włoski", l_mn_mo: "włoscy" }, { l_poj: "wysoki", l_mn_mo: "wysocy" },
+            { l_poj: "chory", l_mn_mo: "chorzy" }, { l_poj: "dobry", l_mn_mo: "dobrzy" },
+            { l_poj: "mądry", l_mn_mo: "mądrzy" }, { l_poj: "stary", l_mn_mo: "starzy" },
+            { l_poj: "interesujący", l_mn_mo: "interesujący" }, { l_poj: "obcy", l_mn_mo: "obcy" },
+            { l_poj: "opiekuńczy", l_mn_mo: "opiekuńczy" }, { l_poj: "uroczy", l_mn_mo: "uroczy" },
+            { l_poj: "cudzy", l_mn_mo: "cudzy" }, { l_poj: "ryży", l_mn_mo: "ryży" },
+            { l_poj: "duży", l_mn_mo: "duzi" }
+        ];
 
-        // --- Game Logic ---
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
+        // --- Stan Gry ---
+        let currentScore = 0;
+        let currentQuestionIndex = 0;
+        const QUESTIONS_PER_ROUND = 10;
+        let currentTask; // { type: 'noun'/'adjNoun', display: 'slowo', correct: 'slowa' or ['slowa1', 'slowa2'] }
+        let timeLeft = 60; // Zmieniono z 15 na 60
+        const INITIAL_TIME = 60; // Zmieniono z 15 na 60
+        let timerInterval;
+
+        // --- Dźwięki (Tone.js) ---
+        let synth;
+        if (typeof Tone !== 'undefined') {
+            synth = new Tone.Synth().toDestination();
+        }
+
+        function playSound(note, duration = "8n") {
+            if (synth && Tone.context.state !== 'running') {
+                Tone.start(); // Uruchomienie kontekstu audio po interakcji użytkownika
+            }
+            if (synth) {
+                try {
+                    synth.triggerAttackRelease(note, duration);
+                } catch (e) {
+                    console.warn("Tone.js error:", e);
+                }
             }
         }
 
-        function startGame(questionSet) {
-            initAudio();
-            playSound('click');
-            currentQuestions = [...questionSet];
-            shuffleArray(currentQuestions);
-            currentQuestionIndex = 0;
-            score = 0;
-            incorrectAnswers = [];
-            
+
+        // --- Funkcje Gry ---
+        function startGame() {
             startScreen.classList.add('hidden');
-            resultsScreen.classList.add('hidden');
-            quizScreen.classList.remove('hidden');
-            
-            showQuestion();
+            endScreen.classList.add('hidden');
+            gameArea.classList.remove('hidden');
+
+            currentScore = 0;
+            currentQuestionIndex = 0;
+            updateScoreDisplay();
+            totalQuestionsDisplay.textContent = QUESTIONS_PER_ROUND;
+            nextQuestion();
         }
 
-        function showQuestion() {
-            optionsContainer.innerHTML = '';
-            const question = currentQuestions[currentQuestionIndex];
-            const qNumber = currentQuestionIndex + 1;
-            const totalQ = currentQuestions.length;
+        function generateQuestion() {
+            const typeRoll = Math.random();
+            let taskText, correctAnswer;
 
-            questionText.textContent = question.question;
-            progressText.textContent = `${qNumber} / ${totalQ}`;
-            progressBar.style.width = `${(qNumber / totalQ) * 100}%`;
-            
-            question.options.forEach(option => {
-                const button = document.createElement('button');
-                button.textContent = option;
-                button.classList.add('btn-answer', 'p-4', 'text-lg', 'font-semibold', 'rounded-xl', 'transition-all', 'duration-200', 'border-2', 'border-transparent', 'hover:border-indigo-400', 'hover:scale-105', 'glass-card');
-                button.style.backgroundColor = document.body.classList.contains('light') ? 'rgba(255, 255, 255, 0.8)' : 'rgba(55, 65, 81, 0.7)';
-                button.addEventListener('click', () => selectAnswer(option, button));
-                optionsContainer.appendChild(button);
-            });
+            if (typeRoll < 0.5 && nouns.length > 0) { // Rzeczownik
+                const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
+                taskText = randomNoun.l_poj;
+                correctAnswer = randomNoun.l_mn_mo;
+                currentTask = { type: 'noun', display: taskText, correct: correctAnswer };
+            } else if (adjectives.length > 0 && nouns.length > 0) { // Przymiotnik + Rzeczownik
+                const randomAdj = adjectives[Math.floor(Math.random() * adjectives.length)];
+                const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
+                taskText = `${randomAdj.l_poj} ${randomNoun.l_poj}`;
+                
+                // Obsługa wielu poprawnych form dla rzeczownika lub przymiotnika
+                const adjPlural = Array.isArray(randomAdj.l_mn_mo) ? randomAdj.l_mn_mo[0] : randomAdj.l_mn_mo; // Na razie bierzemy pierwszą formę przymiotnika, jeśli jest ich więcej
+                
+                if (Array.isArray(randomNoun.l_mn_mo)) {
+                    correctAnswer = randomNoun.l_mn_mo.map(noun_pl => `${adjPlural} ${noun_pl}`);
+                } else {
+                    correctAnswer = `${adjPlural} ${randomNoun.l_mn_mo}`;
+                }
+                currentTask = { type: 'adjNoun', display: taskText, correct: correctAnswer };
+            } else if (nouns.length > 0) { // Fallback na rzeczownik, jeśli nie ma przymiotników
+                 const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
+                taskText = randomNoun.l_poj;
+                correctAnswer = randomNoun.l_mn_mo;
+                currentTask = { type: 'noun', display: taskText, correct: correctAnswer };
+            }
+             else { // Fallback jeśli jakimś cudem obie listy są puste
+                questionArea.textContent = "Brak słów!";
+                return;
+            }
+            questionArea.textContent = taskText;
         }
 
-        function selectAnswer(selectedOption, clickedButton) {
-            const buttons = optionsContainer.querySelectorAll('button');
-            buttons.forEach(btn => btn.disabled = true);
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex > QUESTIONS_PER_ROUND) {
+                endGame();
+                return;
+            }
+
+            updateQuestionCounter();
+            generateQuestion();
             
-            const question = currentQuestions[currentQuestionIndex];
-            const isCorrect = selectedOption === question.answer;
+            answerInput.value = '';
+            answerInput.disabled = false;
+            feedbackDisplay.textContent = '';
+            feedbackDisplay.className = 'feedback';
+            checkButton.classList.remove('hidden');
+            nextButton.classList.add('hidden');
+            
+            resetTimer();
+            startTimer();
+        }
+
+        function checkAnswer() {
+            stopTimer();
+            const userAnswer = answerInput.value.trim().toLowerCase();
+            let isCorrect = false;
+
+            if (Array.isArray(currentTask.correct)) {
+                isCorrect = currentTask.correct.some(ans => ans.toLowerCase() === userAnswer);
+            } else {
+                isCorrect = currentTask.correct.toLowerCase() === userAnswer;
+            }
 
             if (isCorrect) {
-                score++;
-                playSound('correct');
-                clickedButton.classList.add('correct');
+                const pointsEarned = 100 + (timeLeft * 1); // Zmieniono mnożnik bonusu za czas na 1 (było 3)
+                currentScore += pointsEarned;
+                feedbackDisplay.textContent = `Poprawnie! +${pointsEarned} pkt`;
+                feedbackDisplay.classList.add('correct');
+                playSound("C5");
             } else {
-                playSound('incorrect');
-                clickedButton.classList.add('incorrect');
-                incorrectAnswers.push({ ...question, selected: selectedOption });
-                buttons.forEach(btn => {
-                    if (btn.textContent === question.answer) btn.classList.add('correct');
-                });
+                currentScore -= 25; // Zmniejszono karę za błąd (było 50)
+                if (currentScore < 0) currentScore = 0;
+                const correctAnswerText = Array.isArray(currentTask.correct) ? currentTask.correct.join(' / ') : currentTask.correct;
+                feedbackDisplay.textContent = `Błąd! Prawidłowa forma: ${correctAnswerText}`;
+                feedbackDisplay.classList.add('incorrect');
+                playSound("C4", "4n");
             }
 
-            setTimeout(() => {
-                currentQuestionIndex++;
-                if (currentQuestionIndex < currentQuestions.length) {
-                    showQuestion();
+            updateScoreDisplay();
+            answerInput.disabled = true;
+            checkButton.classList.add('hidden');
+            nextButton.classList.remove('hidden');
+        }
+        
+        function updateScoreDisplay() {
+            scoreDisplay.textContent = currentScore;
+        }
+
+        function updateQuestionCounter() {
+            questionCountDisplay.textContent = currentQuestionIndex;
+        }
+
+        function startTimer() {
+            timeLeft = INITIAL_TIME; // Ustawia czas na 60 sekund
+            timeLeftDisplay.textContent = timeLeft; // Aktualizuje wyświetlany czas
+            timerBar.style.width = '100%';
+            timerBar.style.backgroundColor = '#2ecc71'; // Zielony
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timeLeftDisplay.textContent = timeLeft; // Aktualizuje wyświetlany czas
+                const percentageLeft = (timeLeft / INITIAL_TIME) * 100;
+                timerBar.style.width = `${percentageLeft}%`;
+
+                // Zmiana koloru paska czasu w zależności od pozostałego czasu
+                if (timeLeft <= INITIAL_TIME * 0.25) { // Ostatnie 25% czasu
+                    timerBar.style.backgroundColor = '#e74c3c'; // Czerwony
+                } else if (timeLeft <= INITIAL_TIME * 0.5) { // Ostatnie 50% czasu
+                    timerBar.style.backgroundColor = '#e67e22'; // Pomarańczowy
                 } else {
-                    showResults();
+                     timerBar.style.backgroundColor = '#2ecc71'; // Zielony
                 }
-            }, 1500);
+
+
+                if (timeLeft <= 0) {
+                    stopTimer();
+                    feedbackDisplay.textContent = "Czas minął!";
+                    feedbackDisplay.classList.add('incorrect');
+                    playSound("A3", "2n");
+                    checkAnswer(); // Traktuj jako błędną odpowiedź
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
         }
         
-        function showResults() {
-            quizScreen.classList.add('hidden');
-            resultsScreen.classList.remove('hidden');
-            
-            const percentage = Math.round((score / currentQuestions.length) * 100);
-            scoreText.textContent = `${percentage}%`;
-            
-            if (incorrectAnswers.length > 0) {
-                reviewButton.classList.remove('hidden');
-                retryIncorrectButton.classList.remove('hidden');
-            } else {
-                reviewButton.classList.add('hidden');
-                retryIncorrectButton.classList.add('hidden');
-            }
+        function resetTimer() {
+            stopTimer();
+            timeLeft = INITIAL_TIME; // Resetuje czas do 60 sekund
+            timeLeftDisplay.textContent = timeLeft; // Aktualizuje wyświetlany czas
+            timerBar.style.width = '100%';
+            timerBar.style.backgroundColor = '#2ecc71'; // Resetuje kolor paska
         }
-        
-        function showReview() {
-            playSound('click');
-            reviewContent.innerHTML = '';
-            incorrectAnswers.forEach((item, index) => {
-                const div = document.createElement('div');
-                div.className = 'p-4 rounded-lg border border-white/20';
-                div.innerHTML = `
-                    <p class="text-gray-400 text-sm">Pytanie:</p>
-                    <p class="text-lg mb-2">${item.question.replace('___', `<strong class="text-red-400">${item.selected}</strong>`)}</p>
-                    <p class="text-sm">Poprawna odpowiedź: <strong class="text-green-400">${item.answer}</strong></p>
-                `;
-                reviewContent.appendChild(div);
-            });
-            reviewModal.classList.remove('hidden', 'opacity-0');
+
+        function endGame() {
+            gameArea.classList.add('hidden');
+            endScreen.classList.remove('hidden');
+            finalScoreDisplay.textContent = currentScore;
+            playSound("G5", "2n");
         }
 
         // --- Event Listeners ---
-        startButton.addEventListener('click', () => startGame(allQuestions));
-        playAgainButton.addEventListener('click', () => {
-            playSound('click');
-            startGame(allQuestions);
-        });
-        retryIncorrectButton.addEventListener('click', () => {
-            playSound('click');
-            const questionsForRetry = incorrectAnswers.map(({ selected, ...rest }) => rest);
-            startGame(questionsForRetry);
-        });
-        reviewButton.addEventListener('click', showReview);
-
-        muteButton.addEventListener('click', () => {
-            isMuted = !isMuted;
-            soundOnIcon.classList.toggle('hidden', isMuted);
-            soundOffIcon.classList.toggle('hidden', !isMuted);
-        });
-
-        themeToggle.addEventListener('change', () => {
-            playSound('click');
-            document.body.classList.toggle('light');
-            document.body.classList.toggle('dark');
-            if (!quizScreen.classList.contains('hidden')) {
-                const buttons = optionsContainer.querySelectorAll('button');
-                buttons.forEach(button => {
-                    button.style.backgroundColor = document.body.classList.contains('light') ? 'rgba(255, 255, 255, 0.8)' : 'rgba(55, 65, 81, 0.7)';
-                });
+        startButton.addEventListener('click', startGame);
+        restartButton.addEventListener('click', startGame);
+        checkButton.addEventListener('click', checkAnswer);
+        nextButton.addEventListener('click', nextQuestion);
+        answerInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter' && !answerInput.disabled) {
+                checkAnswer();
             }
         });
+        
     </script>
 </body>
 </html>
